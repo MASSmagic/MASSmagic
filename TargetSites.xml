@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<wmc__TEOSiteMgr RevNumber="1">
+	<EOSites>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-001" LastModifiedJD="2456497.04579861" Nomenclature="Zagreb, Croatia" Notes="GMT: 06:13:57; Lens(es): 180, 400; early morning, clear, near nadir; Closest approach lat: 45.45, lon: 15.86 at 06:14:21">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.806342" lon="0.244346"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-002" LastModifiedJD="2456497.04579861" Nomenclature="Pristina, Kosovo" Notes="GMT: 06:15:14; Lens(es): 180, 400; early morning, clear, near nadir; Closest approach lat: 43.01, lon: 21.38 at 06:15:36">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.764454" lon="0.345575"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-003" LastModifiedJD="2456497.04579861" Nomenclature="St. Georges, Grenada" Notes="GMT: 14:10:59; Lens(es): 400, 800; mid-morning, partly cloudy, near nadir; Closest approach lat: 11.96, lon: -61.90 at 14:11:22">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.228638" lon="-1.096067"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-004" LastModifiedJD="2456497.04579861" Nomenclature="Georgetown, Guyana" Notes="GMT: 14:12:40; Lens(es): 400, 800; mid-morning, partly cloudy, nadir; Closest approach lat: 6.86, lon: -58.16 at 14:13:03">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.139626" lon="-1.029744"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-005" LastModifiedJD="2456497.04579861" Nomenclature="Andrews Forest, Oregon" Notes="GMT: 15:31:45; Lens(es): 400, 800; early morning, clear, nadir; Closest approach lat: 44.01, lon: -122.30 at 15:32:09">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.781908" lon="-2.165954"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+		<wmc__TEOSite Category="Daily" CreatedJD="2456497.04579861" Format="1" Ident="205-006" LastModifiedJD="2456497.04579861" Nomenclature="Belize Barrier Reef Res." Notes="GMT: 15:42:31; Lens(es): 50, 180; mid-morning, partly cloudy, left of track">
+			<TGeoCoordsEx alt="0" coordtype="gct_Geodetic" lat="0.296706" lon="-1.560324"/>
+			<PerimeterLocus/>
+		</wmc__TEOSite>
+	</EOSites>
+</wmc__TEOSiteMgr>
