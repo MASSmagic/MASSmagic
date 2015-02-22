@@ -9,11 +9,11 @@ function [ latitude, longitude ] = getISSLatLong()
 
 latlong=urlread('http://api.open-notify.org/iss-now.json');
 latarr = strsplit(latlong,'"latitude":');
-latarr2 = strsplit(char(latarr(2)),',');
+latarr2 = strsplit(char(latarr(2)),'}');
 latitude = str2double(latarr2(1));
 
-longarr = strsplit(latlong,{'"longitude":','}'});
-longitude = str2double(longarr(2));
+longarr = strsplit(latlong,{'"longitude":',','});
+longitude = str2double(longarr(3));
 
 end
 

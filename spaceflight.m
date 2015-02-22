@@ -22,7 +22,7 @@ function varargout = spaceflight(varargin)
 
 % Edit the above text to modify the response to help spaceflight
 
-% Last Modified by GUIDE v2.5 20-Feb-2015 23:55:42
+% Last Modified by GUIDE v2.5 21-Feb-2015 23:21:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -259,3 +259,32 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+ax = gca;
+[lat,lon] = getISSLatLong();
+ax.XLim = [lon-20,lon+20];
+ax.YLim = [lat-20,lat+20];
+plot(lon,lat,'.r','MarkerSize',20)
+plot_google_map
+% Hint: place code in OpeningFcn to populate axes1
+
+
+% --- Executes during object creation, after setting all properties.
+function axes2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+[lat,lon] = getISSLatLong();
+img = imread('MercatorProjection.jpg');
+[imgH,imgW,~] = size(img);
+[x,y] = mercatorProjection(lon,lat, imgW, imgH);
+imshow(img, 'InitialMag',100, 'Border','tight'), hold on
+plot(x,y, 'ob', 'MarkerSize',10, 'LineWidth',3)
+hold off
+% Hint: place code in OpeningFcn to populate axes2
