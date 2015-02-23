@@ -1,4 +1,4 @@
-function projectOrbit()
+function plotOrbitalPath()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 [lat1,lon1] = getISScoord();
@@ -48,9 +48,9 @@ img = imread('MercatorProjection.jpg');
 [x2,y2] = mercatorProjection(data2(:,2),data2(:,1), imgW, imgH);
 imshow(img, 'InitialMag',100, 'Border','tight')
 hold on
-plot(x0, y0, 'or', 'MarkerSize',7, 'LineWidth',2)
-plot(x1,y1,'--b')
-plot(x2,y2,'--b')
+plot(x0, y0, 'or', 'MarkerSize',5, 'LineWidth',2.5)
+plot(x1,y1,'--y','LineWidth',1.5)
+plot(x2,y2,'--y','LineWidth',1.5)
 hold off
 
 end
