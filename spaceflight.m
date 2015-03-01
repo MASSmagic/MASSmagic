@@ -22,7 +22,7 @@ function varargout = spaceflight(varargin)
 
 % Edit the above text to modify the response to help spaceflight
 
-% Last Modified by GUIDE v2.5 01-Mar-2015 14:34:56
+% Last Modified by GUIDE v2.5 01-Mar-2015 14:48:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -246,13 +246,13 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in checkbox4.
-function checkbox4_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox4 (see GCBO)
+% --- Executes on button press in wiki.
+function wiki_Callback(hObject, eventdata, handles)
+% hObject    handle to wiki (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox4
+% Hint: get(hObject,'Value') returns toggle state of wiki
 
 
 % --- Executes on button press in checkbox5.
