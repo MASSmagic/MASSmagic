@@ -22,7 +22,7 @@ function varargout = spaceflight(varargin)
 
 % Edit the above text to modify the response to help spaceflight
 
-% Last Modified by GUIDE v2.5 23-Feb-2015 18:03:36
+% Last Modified by GUIDE v2.5 01-Mar-2015 14:34:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,6 +51,16 @@ function spaceflight_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to spaceflight (see VARARGIN)
+
+%start musicplayer code
+
+dirlist=dir('Music');
+handles.playlist=dirlist(3:length(dirlist));
+handles.count=1;
+handles.pausebool=1;
+[y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
+handles.player=audioplayer(y,Fs);
+%end musicplayer code
 
 % Choose default command line output for spaceflight
 handles.output = hObject;
@@ -281,3 +291,54 @@ function LittleMap_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 plotOrbitalPath()
 % Hint: place code in OpeningFcn to populate LittleMap
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.pausebool==1
+    handles.pausebool=0;
+    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    handles.player.resume;
+else
+    if handles.count>length(handles.playlist)
+        handles.count=1;
+    end
+    [y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
+    handles.player=audioplayer(y,Fs);
+    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    play(handles.player);
+    handles.count=handles.count+1;
+end
+guidata(hObject,handles);
+
+
+% --- Executes on button press in pushbutton8.
+function pushbutton8_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.pausebool=1;
+handles.player.pause;
+guidata(hObject,handles)
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.player.isplaying
+   handles.pausebool=1;
+   handles.player.pause;
+end
+handles.count=handles.count+1;
+if handles.count>length(handles.playlist)
+    handles.count=1;
+end
+[y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
+handles.player=audioplayer(y,Fs);
+set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+play(handles.player);
+guidata(hObject,handles)
