@@ -277,9 +277,12 @@ function BigMap_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 ax = gca;
 [lat,lon] = getISScoord();
-ax.XLim = [lon-10,lon+20];
-ax.YLim = [lat-10,lat+20];
-plot(lon,lat,'+r','MarkerSize',20,'LineWidth',2)
+% ax.XLim = [lon-10,lon+20];
+% ax.YLim = [lat-10,lat+20];
+ax.XLim = [-180,180];
+ax.YLim = [-85,85];
+plotTarget
+plot(lon,lat,'or','MarkerSize',5,'LineWidth',2)
 plot_google_map();
 % Hint: place code in OpeningFcn to populate BigMap
 
@@ -300,7 +303,7 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 if handles.pausebool==1
     handles.pausebool=0;
-    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    %set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
     handles.player.resume;
 else
     if handles.count>length(handles.playlist)
@@ -308,7 +311,7 @@ else
     end
     [y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
     handles.player=audioplayer(y,Fs);
-    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    %set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
     play(handles.player);
     handles.count=handles.count+1;
 end
@@ -339,6 +342,6 @@ if handles.count>length(handles.playlist)
 end
 [y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
 handles.player=audioplayer(y,Fs);
-set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+%set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
 play(handles.player);
 guidata(hObject,handles)
