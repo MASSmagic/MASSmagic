@@ -22,7 +22,11 @@ function varargout = spaceflight(varargin)
 
 % Edit the above text to modify the response to help spaceflight
 
+<<<<<<< HEAD
 % Last Modified by GUIDE v2.5 01-Mar-2015 14:48:18
+=======
+% Last Modified by GUIDE v2.5 08-Mar-2015 01:41:09
+>>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -52,18 +56,52 @@ function spaceflight_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to spaceflight (see VARARGIN)
 
-%start musicplayer code
-
+%% Music player code
 dirlist=dir('Music');
 handles.playlist=dirlist(3:length(dirlist));
 handles.count=1;
 handles.pausebool=1;
-[y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
+[y, Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
 handles.player=audioplayer(y,Fs);
-%end musicplayer code
 
+%% Timer
+[lat,lon] = getISScoord();
+
+%Big Map
+set(handles.BigMap,'XLim',[lon-45,lon+45],'YLim',[lat-21,lat+21])
+plot(handles.BigMap,plot_google_map)
+plot(handles.BigMap,lon,lat,'or','MarkerSize',5,'LineWidth',2)
+
+%Little Map
+ax = handles.LilMap;
+plotOrbitalPath(ax)
+%plot(handles.LilMap,plotOrbitalPath)
+
+%% Logo
+axes(handles.logo);
+imshow('massmagiclogo.png');
+
+%%Show first Target and fill fields
+sites=parseXMLFile('TargetSites.xml');
+set(handles.destinationtext,'String',sites(1).target_name);
+set(handles.notestext,'String',sites(1).notes);
+set(handles.lenstext,'String',sites(1).lenses);
+
+%%Timer Functionality and run timeTilTarget
+handles.countdowntimer=timeTilTarget(lat,lon);
+set(handles.countdown,'String',handles.countdowntimer);
+
+%% Other
 % Choose default command line output for spaceflight
 handles.output = hObject;
+
+% timer to update
+handles.timer = timer(...
+    'ExecutionMode', 'fixedRate', ...   % Run timer repeatedly
+    'Period', 3, ...                % Initial period is 3 sec.
+    'TimerFcn', {@update_display,hObject}); % Specify callback
+
+start(handles.timer);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -270,32 +308,10 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% --- Executes during object creation, after setting all properties.
-function BigMap_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to BigMap (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-ax = gca;
-[lat,lon] = getISScoord();
-ax.XLim = [lon-10,lon+20];
-ax.YLim = [lat-10,lat+20];
-plot(lon,lat,'+r','MarkerSize',20,'LineWidth',2)
-plot_google_map();
-% Hint: place code in OpeningFcn to populate BigMap
 
-
-% --- Executes during object creation, after setting all properties.
-function LittleMap_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to axes2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-plotOrbitalPath()
-% Hint: place code in OpeningFcn to populate LittleMap
-
-
-% --- Executes on button press in pushbutton7.
-function pushbutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton7 (see GCBO)
+% --- Executes on button press in PlayButton.
+function PlayButton_Callback(hObject, eventdata, handles)
+% hObject    handle to PlayButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if handles.pausebool==1
@@ -315,18 +331,18 @@ end
 guidata(hObject,handles);
 
 
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
+% --- Executes on button press in PauseButton.
+function PauseButton_Callback(hObject, eventdata, handles)
+% hObject    handle to PauseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.pausebool=1;
 handles.player.pause;
 guidata(hObject,handles)
 
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
+% --- Executes on button press in SkipButton.
+function SkipButton_Callback(hObject, eventdata, handles)
+% hObject    handle to SkipButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if handles.player.isplaying
@@ -342,3 +358,43 @@ handles.player=audioplayer(y,Fs);
 set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
 play(handles.player);
 guidata(hObject,handles)
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over countdown.
+function countdown_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to countdown (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[lat,lon] = getISScoord();
+handles.countdowntimer=timeTilTarget(lat,lon);
+set(handles.countdown,'String',handles.countdowntimer);
+
+% --- Executes during object creation, after setting all properties.
+function LilMap_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+%plotOrbitalPath()
+% Hint: place code in OpeningFcn to populate LittleMap
+
+
+% --- Executes during object creation, after setting all properties.
+function BigMap_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to BigMap (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate BigMap
+
+
+%% User functions
+%this function updates display (is called every 3 seconds) and updates
+%countdown timer
+function update_display(hObject,eventdata,hfigure)
+
+[y,x] = getISScoord();
+handles = guidata(hfigure);
+%handles.countdowntimer=handles.countdowntimer-3;
+%set(handles.countdown,'String',handles.countdowntimer);
+set(handles.BigMap.Children(2),'XData',x,'YData',y,'Marker','o','MarkerSize',5,'LineWidth',2);
+%guidata(hObject, handles);
