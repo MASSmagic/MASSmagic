@@ -15,7 +15,8 @@ function [ sites ] = parseXMLFile( XMLFile )
 %XMLFile = fullfile(pathname, filename);
 
 %Read XML file
-XMLDoc = xmlwrite(XMLFile);
+XMLFile2=fullfile(pwd,'TargetSites.xml'); %HARDCODED
+XMLDoc = xmlwrite(XMLFile2);
 a=strsplit(XMLDoc,{'<wmc__TEOSite Category="Daily"','</wmc__TEOSite>'});
 no_of_targets = (length(a)-1)/2;
 sites(no_of_targets) = struct('site_no',[], 'passover_time',[], 'target_name',[], 'lat',[], 'long', [], 'notes', [], 'lenses', [], 'closest_approach', []);

@@ -23,9 +23,13 @@ function varargout = spaceflight(varargin)
 % Edit the above text to modify the response to help spaceflight
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 % Last Modified by GUIDE v2.5 01-Mar-2015 14:48:18
 =======
 % Last Modified by GUIDE v2.5 08-Mar-2015 01:41:09
+>>>>>>> origin/master
+=======
+% Last Modified by GUIDE v2.5 08-Mar-2015 12:24:12
 >>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
@@ -82,10 +86,13 @@ axes(handles.logo);
 imshow('massmagiclogo.png');
 
 %%Show first Target and fill fields
-sites=parseXMLFile('TargetSites.xml');
-set(handles.destinationtext,'String',sites(1).target_name);
-set(handles.notestext,'String',sites(1).notes);
-set(handles.lenstext,'String',sites(1).lenses);
+handles.sites=parseXMLFile('TargetSites.xml');
+handles.sitecounter=1;
+set(handles.destinationtext,'String',handles.sites(handles.sitecounter).target_name);
+set(handles.notestext,'String',handles.sites(handles.sitecounter).notes);
+set(handles.lenstext,'String',handles.sites(handles.sitecounter).lenses);
+targetstr=strcat(num2str(handles.sitecounter),'/',num2str(length(handles.sites)));
+set(handles.targetlist,'String',targetstr);
 
 %%Timer Functionality and run timeTilTarget
 handles.countdowntimer=timeTilTarget(lat,lon);
@@ -357,6 +364,23 @@ end
 handles.player=audioplayer(y,Fs);
 set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
 play(handles.player);
+guidata(hObject,handles)
+
+% --- Executes on button press in scrolltarget.
+function scrolltarget_Callback(hObject, eventdata, handles)
+% hObject    handle to scrolltarget (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.sitecounter==length(handles.sites)
+    handles.sitecounter=1;
+else
+    handles.sitecounter=handles.sitecounter+1;
+end
+set(handles.destinationtext,'String',handles.sites(handles.sitecounter).target_name);
+set(handles.notestext,'String',handles.sites(handles.sitecounter).notes);
+set(handles.lenstext,'String',handles.sites(handles.sitecounter).lenses);
+targetstr=strcat(num2str(handles.sitecounter),'/',num2str(length(handles.sites)));
+set(handles.targetlist,'String',targetstr);
 guidata(hObject,handles)
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
