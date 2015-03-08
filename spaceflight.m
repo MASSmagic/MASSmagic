@@ -22,7 +22,7 @@ function varargout = spaceflight(varargin)
 
 % Edit the above text to modify the response to help spaceflight
 
-% Last Modified by GUIDE v2.5 07-Mar-2015 17:31:50
+% Last Modified by GUIDE v2.5 08-Mar-2015 01:41:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,20 +68,36 @@ set(handles.BigMap,'XLim',[lon-45,lon+45],'YLim',[lat-21,lat+21])
 plot(handles.BigMap,plot_google_map)
 plot(handles.BigMap,lon,lat,'or','MarkerSize',5,'LineWidth',2)
 
+%Little Map
+ax = handles.LilMap;
+plotOrbitalPath(ax)
+%plot(handles.LilMap,plotOrbitalPath)
+
+%% Logo
+axes(handles.logo);
+imshow('massmagiclogo.png');
+
+%%Show first Target and fill fields
+sites=parseXMLFile('TargetSites.xml');
+set(handles.destinationtext,'String',sites(1).target_name);
+set(handles.notestext,'String',sites(1).notes);
+set(handles.lenstext,'String',sites(1).lenses);
+
+%%Timer Functionality and run timeTilTarget
+handles.countdowntimer=timeTilTarget(lat,lon);
+set(handles.countdown,'String',handles.countdowntimer);
+
+%% Other
+% Choose default command line output for spaceflight
+handles.output = hObject;
+
+% timer to update
 handles.timer = timer(...
     'ExecutionMode', 'fixedRate', ...   % Run timer repeatedly
     'Period', 3, ...                % Initial period is 3 sec.
     'TimerFcn', {@update_display,hObject}); % Specify callback
 
 start(handles.timer);
-
-%Little Map
-ax = handles.LilMap;
-plotOrbitalPath(ax)
-%plot(handles.LilMap,plotOrbitalPath)
-%% Other
-% Choose default command line output for spaceflight
-handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
@@ -296,7 +312,7 @@ function PlayButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 if handles.pausebool==1
     handles.pausebool=0;
-    %set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
     handles.player.resume;
 else
     if handles.count>length(handles.playlist)
@@ -304,7 +320,7 @@ else
     end
     [y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
     handles.player=audioplayer(y,Fs);
-    %set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+    set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
     play(handles.player);
     handles.count=handles.count+1;
 end
@@ -335,10 +351,19 @@ if handles.count>length(handles.playlist)
 end
 [y Fs]=audioread(strcat('Music\',handles.playlist(handles.count).name));
 handles.player=audioplayer(y,Fs);
-%set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
+set(handles.songtitle,'String',handles.playlist(handles.count).name(1:length(handles.playlist(handles.count).name)-4));
 play(handles.player);
 guidata(hObject,handles)
 
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over countdown.
+function countdown_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to countdown (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[lat,lon] = getISScoord();
+handles.countdowntimer=timeTilTarget(lat,lon);
+set(handles.countdown,'String',handles.countdowntimer);
 
 % --- Executes during object creation, after setting all properties.
 function LilMap_CreateFcn(hObject, eventdata, handles)
@@ -359,8 +384,13 @@ function BigMap_CreateFcn(hObject, eventdata, handles)
 
 
 %% User functions
+%this function updates display (is called every 3 seconds) and updates
+%countdown timer
 function update_display(hObject,eventdata,hfigure)
 
 [y,x] = getISScoord();
 handles = guidata(hfigure);
+%handles.countdowntimer=handles.countdowntimer-3;
+%set(handles.countdown,'String',handles.countdowntimer);
 set(handles.BigMap.Children(2),'XData',x,'YData',y,'Marker','o','MarkerSize',5,'LineWidth',2);
+%guidata(hObject, handles);
